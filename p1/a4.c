@@ -1,4 +1,3 @@
-
 #define DELAY 250000 // time in microseconds
 #define ITERATIONS 50
 #define NUM_THREADS 10
@@ -15,7 +14,6 @@ struct SumSub {
     int delay;
     int iterations;
     pthread_mutex_t* mutex1;
-    pthread_mutex_t* mutex2;
 };
 
 void* Func (void* data) {
@@ -24,11 +22,8 @@ void* Func (void* data) {
     for (int i = 0; i < sumSub->iterations; i++) {
         pthread_mutex_lock(sumSub->mutex1);
         *(sumSub->a) = *(sumSub->a) + 1;
-        pthread_mutex_unlock(sumSub->mutex1);
-        
-        pthread_mutex_lock(sumSub->mutex2);    
         *(sumSub->b) = *(sumSub->b) - 1;
-        pthread_mutex_unlock(sumSub->mutex2);
+        pthread_mutex_unlock(sumSub->mutex1);
         
         usleep(sumSub->delay);
     }
@@ -39,11 +34,7 @@ void* PrintSumSub (void* data) {
     struct SumSub* sumSub = (struct SumSub*)data;
     while (1) {
         pthread_mutex_lock(sumSub->mutex1);
-        pthread_mutex_lock(sumSub->mutex2);
-        
         printf("a: %d, b: %d, sum: %d\n", *(sumSub->a), *(sumSub->b), *(sumSub->a) + *(sumSub->b));
-
-        pthread_mutex_unlock(sumSub->mutex2);
         pthread_mutex_unlock(sumSub->mutex1);
         usleep(sumSub->delay);
     }
@@ -54,27 +45,24 @@ int main() {
     int* a = malloc(sizeof(volatile int));
     int* b = malloc(sizeof(volatile int));
     pthread_mutex_t* mutex1 = malloc(sizeof(pthread_mutex_t));
-    pthread_mutex_t* mutex2 = malloc(sizeof(pthread_mutex_t));
 
     *a = 0;
     *b = 0;
 
     struct SumSub* data1 = malloc(sizeof(struct SumSub));
-    struct SumSub data2 = {b, a, DELAY, ITERATIONS, mutex2, mutex1};
+    struct SumSub data2 = {b, a, DELAY, ITERATIONS, mutex1};
 
     data1->a = a;
     data1->b = b;
     data1->delay = DELAY;
     data1->iterations = ITERATIONS;
     data1->mutex1 = mutex1;
-    data1->mutex2 = mutex2;
 
     pthread_t threadsTypeA[NUM_THREADS];
     pthread_t threadsTypeB[NUM_THREADS];
     pthread_t printThread;
 
     pthread_mutex_init(mutex1, NULL);
-    pthread_mutex_init(mutex2, NULL);
 
     for (int i = 0; i < NUM_THREADS; i++) {
         pthread_create(&threadsTypeA[i], NULL, (void* (*)(void*))Func, data1);
@@ -89,13 +77,13 @@ int main() {
     }
 
     pthread_mutex_destroy(mutex1);
-    pthread_mutex_destroy(mutex2);
 
     pthread_cancel(printThread);
     
     free(a);
     free(b);
     free(data1);
+    free(mutex1);
 
     return 0;
 }
