@@ -26,6 +26,7 @@ void* Func (void* data) {
     struct SumSub* sumSub = (struct SumSub*)data;
 
     for (int i = 0; i < sumSub->iterations; i++) {
+        // Cambio del orden del bloqueo para evitar interbloqueo
         if (sumSub->orden1 < sumSub->orden2) {
             pthread_mutex_lock(sumSub->mutex1);
             pthread_mutex_lock(sumSub->mutex2);
@@ -46,7 +47,10 @@ void* Func (void* data) {
 
 void* PrintSumSub (void* data) {
     struct SumSub* sumSub = (struct SumSub*)data;
+
+    // El bucle se ejecuta infinitamente hasta que se le pida al thread que cancele
     while (1) {
+        // Cambio del orden del bloqueo para evitar interbloqueo
         if (sumSub->orden1 < sumSub->orden2) {
             pthread_mutex_lock(sumSub->mutex1);
             pthread_mutex_lock(sumSub->mutex2);
