@@ -51,8 +51,8 @@ int main() {
         pthread_join(threadsTypeA[i], NULL);
     }
     
-    free(a);
-    free(b);
+    free((void*)a);
+    free((void*)b);
     free(data1);
 
     return 0;

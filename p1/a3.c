@@ -69,8 +69,8 @@ int main() {
 
     pthread_cancel(printThread);
     
-    free(a);
-    free(b);
+    free((void*)a);
+    free((void*)b);
     free(data1);
 
     return 0;
