@@ -107,11 +107,11 @@ int main() {
         pthread_join(threadsTypeA[i], NULL);
         pthread_join(threadsTypeB[i], NULL);
     }
-
+    
+    pthread_cancel(printThread);
+    
     pthread_mutex_destroy(mutex1);
     pthread_mutex_destroy(mutex2);
-
-    pthread_cancel(printThread);
     
     free((void*)a);
     free((void*)b);
