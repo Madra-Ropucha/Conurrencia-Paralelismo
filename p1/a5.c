@@ -1,4 +1,3 @@
-
 #define DELAY 250 // time in microseconds
 #define ITERATIONS 100
 #define NUM_THREADS 10
