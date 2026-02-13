@@ -51,16 +51,16 @@ int main() {
     data1->delay = DELAY;
     data1->iterations = ITERATIONS;
 
+    pthread_t printThread;
     pthread_t threadsTypeA[NUM_THREADS];
     pthread_t threadsTypeB[NUM_THREADS];
-    pthread_t printThread;
+
+    pthread_create(&printThread, NULL, (void* (*)(void*))PrintSumSub, data1);
 
     for (int i = 0; i < NUM_THREADS; i++) {
         pthread_create(&threadsTypeA[i], NULL, (void* (*)(void*))Func, data1);
         pthread_create(&threadsTypeB[i], NULL, (void* (*)(void*))Func, &data2);
     }
-
-    pthread_create(&printThread, NULL, (void* (*)(void*))PrintSumSub, data1);
 
     for (int i = 0; i < NUM_THREADS; i++) {
         pthread_join(threadsTypeA[i], NULL);

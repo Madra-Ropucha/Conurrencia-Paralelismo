@@ -84,20 +84,20 @@ int main() {
     data1->mutex2 = mutex2;
     data1->orden1 = ORDENV1;
     data1->orden2 = ORDENV2;
-
+    
+    pthread_t printThread;
     pthread_t threadsTypeA[NUM_THREADS];
     pthread_t threadsTypeB[NUM_THREADS];
-    pthread_t printThread;
 
     pthread_mutex_init(mutex1, NULL);
     pthread_mutex_init(mutex2, NULL);
+    
+    pthread_create(&printThread, NULL, (void* (*)(void*))PrintSumSub, data1);
 
     for (int i = 0; i < NUM_THREADS; i++) {
         pthread_create(&threadsTypeA[i], NULL, (void* (*)(void*))Func, data1);
         pthread_create(&threadsTypeB[i], NULL, (void* (*)(void*))Func, &data2);
     }
-
-    pthread_create(&printThread, NULL, (void* (*)(void*))PrintSumSub, data1);
 
     for (int i = 0; i < NUM_THREADS; i++) {
         pthread_join(threadsTypeA[i], NULL);
