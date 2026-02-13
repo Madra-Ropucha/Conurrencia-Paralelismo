@@ -112,6 +112,8 @@ int main() {
     free(a);
     free(b);
     free(data1);
+    free(mutex1);
+    free(mutex2);
 
     return 0;
 }
