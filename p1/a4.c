@@ -42,8 +42,8 @@ void* PrintSumSub (void* data) {
 }
 
 int main() {
-    int* a = malloc(sizeof(volatile int));
-    int* b = malloc(sizeof(volatile int));
+    volatile int* a = malloc(sizeof(volatile int));
+    volatile int* b = malloc(sizeof(volatile int));
     pthread_mutex_t* mutex1 = malloc(sizeof(pthread_mutex_t));
 
     *a = 0;

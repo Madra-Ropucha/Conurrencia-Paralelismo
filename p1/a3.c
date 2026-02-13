@@ -37,8 +37,8 @@ void* PrintSumSub (void* data) {
 }
 
 int main() {
-    int* a = malloc(sizeof(volatile int));
-    int* b = malloc(sizeof(volatile int));
+    volatile int* a = malloc(sizeof(volatile int));
+    volatile int* b = malloc(sizeof(volatile int));
 
     *a = 0;
     *b = 0;
